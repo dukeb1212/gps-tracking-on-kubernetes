@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#2196F3</color>
+    <color name="normal">#664FA3</color>
+    <color name="missing_msg">#FF1100</color>
+    <color name="connecting">#78DA07</color>
 </resources>
