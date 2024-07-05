@@ -277,22 +277,14 @@ class MainActivity : AppCompatActivity(), ClientCallback {
                     editor.putInt("Package count", count)
                     editor.apply()
 
-                    val locationData = mapOf(
-                        "latitude" to latitude,
-                        "longitude" to longitude,
-                        "speed" to speed,
-                        "timestamp" to formattedDateTime,
-                    )
+                    val locationData = "STT: $count, Time Send: $formattedDateTime , Latitude: $latitude, Longitude: $longitude, Speed: $speed"
 
-                    val jsonLocationData = JSONObject(locationData).toString()
-
-                    Log.d("Check",jsonLocationData)
                     runOnUiThread {
                         latitudeValue.text = getFormattedCoordinate(latitude, "N")
                         longitudeValue.text = getFormattedCoordinate(longitude, "E")
                     }
                     if (connectSocket) {
-                        SocketClient.sendToServer(jsonLocationData, callback) // Pass the callback here
+                        SocketClient.sendToServer(locationData, callback) // Pass the callback here
                         getAddressFromCoordinates(latitude, longitude) // Update address
                     }
                 }
