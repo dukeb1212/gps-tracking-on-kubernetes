@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngrok
+  namespace: location-listener-v3
+  labels:
+    app: ngrok
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngrok
+  template:
+    metadata:
+      labels:
+        app: ngrok
+    spec:
+      containers:
+      - name: ngrok
+        image: wernight/ngrok
+        ports:
+        - containerPort: 4040
+        env:
+        - name: NGROK_AUTHTOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ngrok-secret
+              key: ngrok-authToken
+        volumeMounts:
+          - name: config
+            mountPath: "/config"
+            readOnly: true
+        command: ["ngrok"]
+        args: ["start", "--all", "--config", "/config/ngrok.yml"]
+      volumes:
+      - name: config
+        configMap:
+          name: ngrok-configmap
+          items:
+          - key: "ngrok.yml"
+            path: "ngrok.yml"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngrok-service
+  namespace: location-listener-v3
+spec:
+  selector:
+    app: ngrok
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 4040
+      targetPort: 4040
